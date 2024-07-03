@@ -1,9 +1,10 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
@@ -17,13 +18,20 @@ kotlin {
         }
     }
 
+    // Name of the module to be imported in the consumer project
+    val xcframeworkName = "ComposeApp"
+    val xcf = XCFramework(xcframeworkName)
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.framework {
+            baseName = xcframeworkName
+
+            // Specify CFBundleIdentifier to uniquely identify the framework
+            binaryOption("bundleId", "com.groupeseb.${xcframeworkName}")
+            xcf.add(this)
             isStatic = true
         }
     }
@@ -66,11 +74,8 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.jetbrains.kmpapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
     }
     packaging {
         resources {
