@@ -4,7 +4,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidApplication)
+    //alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
@@ -76,6 +77,10 @@ android {
     defaultConfig {
         minSdk = 24
         targetSdk = 34
+        // For app
+        //applicationId = "com.jetbrains.kmpapp"
+        //versionCode = 1
+        //versionName = "1.0"
     }
     packaging {
         resources {
